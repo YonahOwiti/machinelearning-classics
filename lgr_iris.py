@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt 
 
 from utils import get_iris  
+from utils_data import *
 
 def error_rate(T,Y):
 	return np.mean(np.round(Y)!=T)
@@ -24,7 +25,6 @@ def cross_entropy(T, Y):
     return E
 
 
-	
 def sigmoid(z):
 	return 1.0/(1.0 + np.exp(-z))
 
@@ -33,17 +33,23 @@ def forward(W, X):
 
 
 def main():
-	# detect ='Iris-versicolor' 
-	# detect ='Iris-setosa'
-	detect ='Iris-virginica'
-	X, T  = get_iris(detect=detect)
-	X, T  = np.shuffle(X,T)
+	
+	X, T  = get_iris()
+	T, label_map = class2numeric(T)
+	
+	detect = 1	
+	T = class1detect(T,detect)
+	
+
+	print "detecting:", label_map[detect]
 
 	N, D  = X.shape 
 	X 		= np.concatenate((np.ones((N,1)), X), axis=1, ) 
 	T 		= T.astype(np.int32)
 	X 		= X.astype(np.float32)
 	D+=1
+
+	Xtrain, Ttrain, Xtest, Ttest = split2test(X, T, perc=0.1, balanced=True)
 
 	# params
 	lr = 5e-4
@@ -52,31 +58,35 @@ def main():
 	cost 	= []
 	error = [] 
 	for i in xrange(max_iteration):
-		Y = forward(W, X)
-		cost.append(cross_entropy(T,Y))
-		error.append(error_rate(T,Y))
+		Ytrain = forward(W, Xtrain)
+		cost.append(cross_entropy(Ttrain,Ytrain))
+		error.append(error_rate(Ttrain,Ytrain))
 
-		W += lr*X.T.dot(T-Y)
+		W += lr*Xtrain.T.dot(Ttrain-Ytrain)
 
 		if i % 5 == 0:
-			print "i=%d\tcost=%.3f\terror=%.3f" % (i,cost[-1],error[-1])
+			print "train: i=%d\tcost=%.3f\terror=%.3f" % (i,cost[-1],error[-1])
+			Ytest = forward(W, Xtest)
+			cost_test 	= cross_entropy(Ttest,Ytest)
+			error_test  = error_rate(Ttest,Ytest)
+			print "validation: i=%d\tcost=%.3f\terror=%.3f" % (i,cost_test,error_test)
 
 	if i % 5 == 0:
-			print "i=%d\tcost=%.3f\terror=%.3f" % (i,cost[-1],error[-1])
+			print "i=%d\tcost=%.3f\terror=%.3f" % (i,cost_test,error_test)
 					
 	print "Final weight:", W 
-	print T 
-	print np.round(Y)
+	print Ttest 
+	print np.round(Ytest)
 
 	
 
-	plt.title('logistic regression ' + detect)
+	plt.title('logistic regression ' + label_map[detect])
 	plt.xlabel('iterations')
 	plt.ylabel('cross entropy')
 	plt.plot(cost)
 	plt.show()
 
-	plt.title('logistic regression ' + detect)
+	plt.title('logistic regression ' + label_map[detect])
 	plt.xlabel('iterations')
 	plt.ylabel('error rate')
 	plt.plot(error)

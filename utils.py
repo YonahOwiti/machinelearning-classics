@@ -27,23 +27,14 @@ def sigmoid(z):
 def forward(W, X):
 	return sigmoid(X.dot(W))
 
-def get_iris(detect='Iris-setosa'):
+def get_iris():
 	X = []; Y =[]
-	if not( detect in ['Iris-setosa', 'Iris-versicolor', 'Iris-virginica']): 
-		raise ValueError( 'value to detect - %s invalid' % (detect))
-	df = pd.read_csv('./datasets/iris/iris.data', sep=',')
-	X=  df.values[:,:-1]
-	Y=  df.values[:,-1] == detect
 
-	return X, Y 
-
-def get_iris_raw():
-	X = []; Y =[]	
 	df = pd.read_csv('./datasets/iris/iris.data', sep=',')
 	X=  df.values[:,:-1]
 	Y=  df.values[:,-1]
 
-	return X, Y 	
+	return X, Y 
 
 def get_ecommerce(user_action=1):
 	X = []; Y =[]

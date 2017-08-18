@@ -9,6 +9,12 @@ motive: Provides datareshape such as sampling, balanced sampling, convert to cla
 from sklearn.utils import shuffle
 import numpy as np 
 
+def class1detect(T, detect): 
+	mask = T == detect
+	T[mask] = 1
+	T[~mask] = 0
+	return T 
+
 def class2numeric(Y):
 	first=True 
 	YY = np.zeros(Y.shape,dtype=np.int32)

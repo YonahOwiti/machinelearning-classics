@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt 
 
 from utils import get_facialexpression, error_rate, cross_entropy,  forward   
+from utils_data import *
 
 def main():
 	
@@ -25,8 +26,7 @@ def main():
 	T 		= T.astype(np.int32)
 	X 		= X.astype(np.float32)
 	#Fix for forecasting on one image
-	T[T==klass]=1
-	T[T!=klass]=0
+	T = class1detect(T, detect=3)
 
 
 	D+=1
