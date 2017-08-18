@@ -3,6 +3,7 @@ Created on Aug 16, 2017
 
 @author: Varela
 
+motive: Logistic regression for ecommerce data
 '''
 import numpy as np 
 import matplotlib.pyplot as plt 

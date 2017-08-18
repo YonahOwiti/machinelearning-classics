@@ -1,52 +1,38 @@
 '''
-Created on Aug 16, 2017
+Created on Aug 17, 2017
 
 @author: Varela
 
+motive: Logistic regression for fer2013.csv dataset
 '''
+
 import numpy as np 
 import matplotlib.pyplot as plt 
 
-from utils import get_iris  
-
-def error_rate(T,Y):
-	return np.mean(np.round(Y)!=T)
-
-# calculate the cross-entropy error
-def cross_entropy(T, Y):
-    E = 0
-    for i in xrange(T.shape[0]):
-        if T[i] == 1:
-            E -= np.log(Y[i])
-        else:
-            E -= np.log(1 - Y[i])
-    return E
-
-
-	
-def sigmoid(z):
-	return 1.0/(1.0 + np.exp(-z))
-
-def forward(W, X):
-	return sigmoid(X.dot(W))
-
+from utils import get_facialexpression, error_rate, cross_entropy,  forward   
 
 def main():
-	# detect ='Iris-versicolor' 
-	# detect ='Iris-setosa'
-	detect ='Iris-virginica'
-	X, T  = get_iris(detect=detect)
-	X, T  = np.shuffle(X,T)
-
+	
+	X, T  = get_facialexpression(balance_ones=True)
+	# X, T  = np.shuffle(X,T)
+	label_map = ['Anger', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
+	# klass =3  error_rate=0.0
+	# klass =4  error_rate=0.0
+	klass =5
 	N, D  = X.shape 
 	X 		= np.concatenate((np.ones((N,1)), X), axis=1, ) 
-	T = T.astype(np.int32)
-	X = X.astype(np.float32)
+	T 		= T.astype(np.int32)
+	X 		= X.astype(np.float32)
+	#Fix for forecasting on one image
+	T[T==klass]=1
+	T[T!=klass]=0
+
+
 	D+=1
 
 	# params
-	lr = 5e-4
-	max_iteration=1000
+	lr = 5e-7
+	max_iteration=12000
 	W  		= np.random.randn(D) / np.sqrt(D)
 	cost 	= []
 	error = [] 
@@ -69,13 +55,13 @@ def main():
 
 	
 
-	plt.title('logistic regression ' + detect)
+	plt.title('logistic regression ' + label_map[klass])
 	plt.xlabel('iterations')
 	plt.ylabel('cross entropy')
 	plt.plot(cost)
 	plt.show()
 
-	plt.title('logistic regression ' + detect)
+	plt.title('logistic regression ' + label_map[klass])
 	plt.xlabel('iterations')
 	plt.ylabel('error rate')
 	plt.plot(error)
@@ -84,4 +70,3 @@ def main():
 
 if __name__ == '__main__':
 	main()
-	
