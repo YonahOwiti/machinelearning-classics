@@ -37,6 +37,14 @@ def get_iris(detect='Iris-setosa'):
 
 	return X, Y 
 
+def get_iris_raw():
+	X = []; Y =[]	
+	df = pd.read_csv('./datasets/iris/iris.data', sep=',')
+	X=  df.values[:,:-1]
+	Y=  df.values[:,-1]
+
+	return X, Y 	
+
 def get_ecommerce(user_action=1):
 	X = []; Y =[]
 	if not( user_action in [1,2,3]): 
@@ -74,6 +82,7 @@ def get_facialexpression(balance_ones=True):
 		Y 	= np.concatenate((Y0, [1]*len(X1)))
 
 	return X, Y
+	
 
 
 
