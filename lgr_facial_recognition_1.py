@@ -24,7 +24,7 @@ class FacialRecognizer1:
 		#Meta data
 		self.labels 		= labels 
 		self.K 				= len(labels) 
-		self.N, self.D  = X.shape 
+		self.N, self.D  = Xtrain.shape 
 
 
 		#Input parameters
@@ -61,7 +61,7 @@ class FacialRecognizer1:
 
 		
 			
-	def fit(self, max_iterations=1000, learning_rate=5e-7, verbose=True):	
+	def fit(self, max_iterations=1500, learning_rate=5e-8, verbose=True):	
 	
 		Xtrain = self.Xtrain
 		Ttrain = self.Ttrain
@@ -75,8 +75,10 @@ class FacialRecognizer1:
 
 		self.train_costs   = np.zeros((max_iterations, self.K), dtype=np.float32)
 		self.train_errors  = np.zeros((max_iterations, self.K), dtype=np.float32)
-		self.test_costs    = np.zeros((max_iterations, self.K), dtype=np.float32)
-		self.test_errors   = np.zeros((max_iterations, self.K), dtype=np.float32)
+		# self.Ytrain = forward(W, Xtrain)    = np.zeros((max_iterations, self.K), dtype=np.float32)
+		
+		self.valid_errors   = np.zeros((max_iterations, self.K), dtype=np.float32)
+		self.valid_costs   = np.zeros((max_iterations, self.K), dtype=np.float32)
 
 
 		for j, l in enumerate(self.labels):
@@ -91,16 +93,17 @@ class FacialRecognizer1:
 			for i in xrange(max_iterations):
 
 				Ytrain = forward(W, Xtrain)
+				Yvalid = forward(W, Xvalid)
 
 				
 
 				self.train_costs[i,j]  =  cross_entropy(Ttrain,Ytrain)
 				self.train_errors[i,j] = error_rate(Ttrain,Ytrain)
 
-				self.validation_costs[i,j]  = cross_entropy(Tvalid,Yvalid)
-				self.validation_errors[i,j] =    error_rate(Tvalid,Yvalid)				
+				self.valid_costs[i,j]  = cross_entropy(Tvalid,Yvalid)
+				self.valid_errors[i,j] =    error_rate(Tvalid,Yvalid)				
 
-				W += learning_rate*X.T.dot(Ttrain-Ytrain)
+				W += learning_rate*Xtrain.T.dot(Ttrain-Ytrain)
 
 
 				if verbose:
@@ -108,8 +111,8 @@ class FacialRecognizer1:
 						print "klass=%s\ti=%d\tcost=%.3f\terror=%.3f\tset=training" % \
 							(l,i,self.train_costs[i,j], self.train_errors[i,j])
 
-						print "klass=%si=%d\tcost=%.3f\terror=%.3f\tset=validating"  % \
-							(l,i,self.validation_costs[i,j], self.validation_errors[i,j])
+						print "klass=%s\ti=%d\tcost=%.3f\terror=%.3f\tset=validating"  % \
+							(l,i,self.valid_costs[i,j], self.valid_errors[i,j])
 
 			self.W.append(W)				
 
@@ -122,15 +125,15 @@ def main():
 	X, T = get_facialexpression(balance_ones=1)
 
 	print 'Ready initializing data...'
-	Xtrain, Ttrain, XX, TT = split2test(X, T, perc=0.1, balanced=True)
+	# Xtrain, Ttrain, XX, TT = split2test(X, T, perc=0.1, balanced=True)
 
-	TT, labels = class2numeric(TT)
-	recognizer = FacialRecognizer1(Xtrain, Ttrain)
-	recognizer.fit()
+	# TT, labels = class2numeric(TT)
+	recognizer = FacialRecognizer1(X, T)
+	recognizer.fit(max_iterations=150, learning_rate=5e-7, verbose=True)
 
 	print 'Predicting...'
-	YY = recognizer.predict(XX)
-	print 'Error rate:', error_rate(TT, YY)
+	Y = recognizer.predict(X)
+	print 'Error rate:', error_rate(T, Y)
 
 
 

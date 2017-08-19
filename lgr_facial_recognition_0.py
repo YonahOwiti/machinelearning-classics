@@ -20,7 +20,7 @@ def main():
 	# klass =3  error_rate=0.0
 	# klass =4  error_rate=0.0
 	# klass =5  error_rate=0.0
-	klass =6
+	klass =0
 	N, D  = X.shape 
 	X 		= np.concatenate((np.ones((N,1)), X), axis=1, ) 
 	T 		= T.astype(np.int32)
