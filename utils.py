@@ -16,14 +16,13 @@ def cross_entropy(T, Y):
 	E = 0
 
 	for i in xrange(T.shape[0]):
-		# yi = min(max(Y[i],1e-8), 1-1e-8)
-		
+		# yi = min(max(Y[i],1e-8), 1-1e-8)		
 		if T[i] == 1:
 			# import code; code.interact(local=dict(globals(), **locals()))
-			E -= np.log(yi)
+			E -= np.log(Y[i])
 		else:
 			# import code; code.interact(local=dict(globals(), **locals()))
-			E -= np.log(1.0 - yi)
+			E -= np.log(1.0 - Y[i])
 	return E
 	
 def sigmoid(z):

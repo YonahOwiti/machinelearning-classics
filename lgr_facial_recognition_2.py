@@ -39,8 +39,8 @@ class LogisticModel(object):
 
 			if i % 20 == 0:
 				pYvalid = self.forward(Xvalid)
-				# c = sigmoid_cost(Yvalid, pYValid)
-				c = cross_entropy(Yvalid, pYValid) 
+				# c = sigmoid_cost(Yvalid, pYvalid)
+				c = cross_entropy(Yvalid, pYvalid) 
 				costs.append(c)	
 				e = error_rate(Yvalid, pYvalid)
 				print "i", i, "cost:", c, "error", e
