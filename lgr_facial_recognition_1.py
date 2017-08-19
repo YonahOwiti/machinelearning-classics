@@ -110,7 +110,7 @@ class FacialRecognizer1:
 				# self.valid_costs[i,j]  = cross_entropy(Tvalid,Yvalid)
 				# self.valid_errors[i,j] =    error_rate(Tvalid,Yvalid)				
 
-				W += learning_rate*X.T.dot(T-Y)
+				W += learning_rate*X.T.dot(Y-T) + 0.5*W
 
 
 				if verbose:
@@ -136,7 +136,7 @@ def main():
 
 	# TT, labels = class2numeric(TT)
 	recognizer = FacialRecognizer1(X, T)
-	recognizer.fit(max_iterations=150, learning_rate=1e-6, verbose=True)
+	recognizer.fit(max_iterations=1500, learning_rate=1e-9, verbose=True)
 
 	print 'Predicting...'
 	Y = recognizer.predict(X)

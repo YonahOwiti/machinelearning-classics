@@ -13,13 +13,18 @@ def error_rate(T,Y):
 
 # calculate the cross-entropy error
 def cross_entropy(T, Y):
-   E = 0
-   for i in xrange(T.shape[0]):
+	E = 0
+
+	for i in xrange(T.shape[0]):
+		# yi = min(max(Y[i],1e-8), 1-1e-8)
+		
 		if T[i] == 1:
-			E -= np.log(Y[i])
+			# import code; code.interact(local=dict(globals(), **locals()))
+			E -= np.log(yi)
 		else:
-			E -= np.log(1 - Y[i])
-   return E
+			# import code; code.interact(local=dict(globals(), **locals()))
+			E -= np.log(1.0 - yi)
+	return E
 	
 def sigmoid(z):
 	return 1.0/(1.0 + np.exp(-z))
