@@ -19,12 +19,12 @@
 
 Summary Statistics:
 
-| Class\Stats  | Min | Max | SD   | Class | Correlation |
-|--------------|-----|-----|------|-------|-------------|
-| sepal length | 4.3 | 7.9 | 5.84 | 0.83  | 0.7826      |
-| sepal width  | 2.0 | 4.4 | 3.05 | 0.43  | -0.4194     |
-| petal length | 1.0 | 6.9 | 3.76 | 1.76  | 0.9490      |
-| petal width  | 0.1 | 2.5 | 1.20 | 0.76  | 0.9565      |
+| Features\Stats  | Min | Max | SD   | Class | Correlation |
+|-----------------|-----|-----|------|-------|-------------|
+| sepal length    | 4.3 | 7.9 | 5.84 | 0.83  | 0.7826      |
+| sepal width     | 2.0 | 4.4 | 3.05 | 0.43  | -0.4194     |
+| petal length    | 1.0 | 6.9 | 3.76 | 1.76  | 0.9490      |
+| petal width     | 0.1 | 2.5 | 1.20 | 0.76  | 0.9565      |
 
 5. Class Distribution: 33.3% for each of 3 classes.
 

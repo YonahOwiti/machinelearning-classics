@@ -25,20 +25,12 @@ class LogisticRegressionK(object):
 			self.labels = np.unique(T)
 		else:
 			self.labels = labels 
-
-		
-
-
-		# T, labels = class2numeric(T)
-
-		# Xtrain, Ttrain, Xvalid, Tvalid = split2test(X, T, perc=0.1, balanced=True)
-		
-
 		
 		#Input parameters		
 		self.split = split 
 		if self.split:
 			self.Xtrain, self.Ttrain, self.Xvalid, self.Tvalid = split2test(X, T, perc=0.1, balanced=True)			
+			# import code; code.interact(local=dict(globals(), **locals()))
 		else: 	
 			self.Xtrain, self.Ttrain = X, T 
 
@@ -46,15 +38,6 @@ class LogisticRegressionK(object):
 		#Meta data				
 		self.K 				  = len(self.labels) 	
 		self.N, self.D  = self.Xtrain.shape 
-
-
-		#Input parameters
-		# self.X = X.astype(np.float32)
-		# self.T = T.astype(np.int)
-		# self.Xtrain = X.astype(np.float32)
-		# self.Ttrain = T.astype(np.int)
-		# self.Xvalid  = Xvalid.astype(np.float32)
-		# self.Tvalid  = Tvalid.astype(np.int)
 
 		#Output parameters
 		self.W  			 = []
@@ -76,9 +59,9 @@ class LogisticRegressionK(object):
 		#we can do better but its the first approach
 		for i in xrange(N):
 			for j, l in enumerate(self.labels):
-				Y[j] = forward(self.W[j], XX[i,:])
+				Y[j] = forward(self.W[j], XX[i,:])			
 
-			YY[i]	= np.argmax(Y[j])	
+			YY[i]	= np.argmax(Y)	
 
 		return YY 	
 
@@ -86,22 +69,18 @@ class LogisticRegressionK(object):
 			
 	def fit(self, max_iterations=1500, learning_rate=5e-8, verbose=True):	
 	
-		# X = self.X
-		# T = self.T
+
 		Xtrain = self.Xtrain
 		Ttrain = self.Ttrain
-		# Xvalid = self.Xvalid
-		# Tvalid = self.Tvalid 
-
 		N, D   = self.N, self.D 		
-		# X 		= np.concatenate((np.ones((N,1)), X), axis=1, ) 
+		
 		Xtrain 		= np.concatenate((np.ones((N,1)), Xtrain), axis=1, ) 
-		# Xvalid 		= np.concatenate((np.ones((len(Tvalid),1)), Xvalid), axis=1, ) 
+		
 
 
 		self.train_costs   = np.zeros((max_iterations, self.K), dtype=np.float32)
 		self.train_errors  = np.zeros((max_iterations, self.K), dtype=np.float32)
-		# self.Ytrain = forward(W, Xtrain)    = np.zeros((max_iterations, self.K), dtype=np.float32)
+		
 		if self.split:
 			n = len(self.Xvalid)
 			self.Xvalid = np.concatenate((np.ones((n,1)), self.Xvalid), axis=1, ) 
@@ -117,28 +96,20 @@ class LogisticRegressionK(object):
 			if verbose: 
 				print "Fitting %s - %d th class" % (l,j)
 
-			# params
-			# lr = 5e-7
-			# max_iteration=150
 			W  		= np.random.randn(D+1) / np.sqrt(D+1)
 			
 			for i in xrange(max_iterations):
 
 				Ytrain = forward(W, Xtrain)
-				# Ytrain = forward(W, Xtrain)
-				
-
 				
 				self.train_costs[i,j]  =  cross_entropy(T1,Ytrain)
 				self.train_errors[i,j] =  error_rate(T1,Ytrain)
-				# self.train_costs[i,j]  =  cross_entropy(Ttrain,Ytrain)
-				# self.train_errors[i,j] =  error_rate(Ttrain,Ytrain)
+
 				if self.split:
 					Yvalid = forward(W, self.Xvalid)
 					self.valid_costs[i,j]  = cross_entropy(T1valid,Yvalid)
 					self.valid_errors[i,j] =    error_rate(T1valid,Yvalid)				
 
-				# W -= learning_rate*X.T.dot(Y-T)
 				W += learning_rate*Xtrain.T.dot(T1-Ytrain)
 
 
@@ -163,18 +134,19 @@ def main():
 
 	X, T = get_facialexpression(balance_ones=1)
 	T, labels = class2numeric(T)
-	# T 	= class1detect(T,1)
+
+	Xtrain, Ttrain, Xtest, Ttest = split2test(X, T, perc=0.1, balanced=True)
 
 	print 'Ready initializing data...'
-	# Xtrain, Ttrain, XX, TT = split2test(X, T, perc=0.1, balanced=True)
 
-	# TT, labels = class2numeric(TT)
-	recognizer = LogisticRegressionK(X, T, labels, split=True)
-	recognizer.fit(max_iterations=350, learning_rate=5e-7, verbose=True)
+	recognizer = LogisticRegressionK(Xtrain, Ttrain, labels, split=True)
+	recognizer.fit(max_iterations=350, learning_rate=1e-6, verbose=True)
 
 	print 'Predicting...'
-	Y = recognizer.predict(X)
-	print 'Error rate:', error_rate(T, Y)
+
+	Ytest = recognizer.predict(Xtest)
+	
+	print 'Error rate:', error_rate(Ttest, Ytest)
 
 
 

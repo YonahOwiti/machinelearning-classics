@@ -20,13 +20,14 @@ def main():
 	# klass =3  error_rate=0.0
 	# klass =4  error_rate=0.0
 	# klass =5  error_rate=0.0
-	klass =0
+	# klass =0
+	klass=4
 	N, D  = X.shape 
 	X 		= np.concatenate((np.ones((N,1)), X), axis=1, ) 
 	T 		= T.astype(np.int32)
 	X 		= X.astype(np.float32)
 	#Fix for forecasting on one image
-	T = class1detect(T, detect=3)
+	T = class1detect(T, detect=klass)
 
 	D+=1
 

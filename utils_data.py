@@ -11,9 +11,9 @@ import numpy as np
 
 def class1detect(T, detect): 
 	mask = T == detect
-	T[mask] = 1
-	T[~mask] = 0
-	return T 
+	TT = np.zeros(T.shape, dtype=np.int32)
+	TT[mask] = 1	
+	return TT 
 
 def class2numeric(Y):
 	first=True 
