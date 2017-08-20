@@ -4,7 +4,7 @@ Created on Aug 20, 2017
 @author: Varela
 
 motivation: Multilayer perceptron for ecommerce data
-				
+status:	not converging			
 '''
 import numpy as np 
 import matplotlib.pyplot as plt 
