@@ -42,13 +42,16 @@ def get_iris():
 
 def get_ecommerce(user_action=1):
 	X = []; Y =[]
-	if not( user_action in [1,2,3]): 
+	if not( user_action in [None,1,2,3]): 
 		raise ValueError( 'value to user_action - %d invalid' % (user_action))
 
 	df = pd.read_csv('./datasets/ecommerce/ecommerce_data.csv', sep=',', header=0)
 	X=  df.values[:,:-1]
-	Y=  np.array(df.values[:,-1] == user_action, dtype=np.int32)
-	
+	if user_action:
+		Y=  np.array(df.values[:,-1] == user_action, dtype=np.int32)
+	else:
+		Y=  np.array(df.values[:,-1], dtype=np.int32)
+				
 	return X, Y 
 
 def get_facialexpression(balance_ones=True):
