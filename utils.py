@@ -11,6 +11,9 @@ import pandas as pd
 def error_rate(T,Y):
 	return np.mean(np.round(Y)!=T)
 
+def classification_rate(T,Y):
+	return np.mean(Y==T)	
+
 # calculate the cross-entropy error
 def cross_entropy(T, Y):
 	E = 0
@@ -20,16 +23,27 @@ def cross_entropy(T, Y):
 		if T[i] == 1:
 			
 			E -= np.log(Y[i])
-		else:
-			# import code; code.interact(local=dict(globals(), **locals()))
+		else:			
 			E -= np.log(1.0 - Y[i])
 	return E
 	
-def sigmoid(z):
-	return 1.0/(1.0 + np.exp(-z))
+def sigmoid(Z):
+	return 1.0/(1.0 + np.exp(-Z))
+
+def softmax(A):
+	expA = np.exp(A)
+	return expA / expA.sum(axis=1, keepdims=True)
 
 def forward(W, X):
 	return sigmoid(X.dot(W))
+
+def y2indicator(y, K):
+	#one-hot_codefy :)
+	N = len(y)
+	ind = np.zeros((N,K))
+	for i in xrange(N):
+		ind[i, y[i]] = 1
+	return ind 
 
 def get_iris():
 	X = []; Y =[]

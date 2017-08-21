@@ -9,12 +9,12 @@ status:	not converging
 import numpy as np 
 import matplotlib.pyplot as plt 
 
-from utils import get_ecommerce, sigmoid 
+from utils import get_ecommerce, softmax
 
 
 
 def forward(W1, b1, W2, b2, X):
-	Z = sigmoid(X.dot(W1) + b1)
+	Z = softmax(X.dot(W1) + b1)
 	A = Z.dot(W2) + b2
 	expA = 	np.exp(A) 
 	Y = expA / expA.sum(axis=1, keepdims=True)	
@@ -36,8 +36,7 @@ def derivative_w2(Z, T, Y):
 	return Z.T.dot(T-Y)
 
 def derivative_b2(T,Y):
-	return (T-Y).sum(axis=0)
-	# return (T-Y).sum(axis=1)
+	return (T-Y).sum(axis=0)	
 
 def derivative_w1(X, Z, T, Y, W2):
 	dZ = (T-Y).dot(W2.T)*Z*(1-Z)
@@ -73,8 +72,8 @@ def main():
 	b2 = np.random.randn(K)   / np.sqrt(K)
 
 	# Running variables 
-	lr = 5e-8
-	max_iteration=15000	
+	lr = 1e-10
+	max_iteration=150000	
 	costs 	= np.zeros((max_iteration,), dtype=np.float32)
 	errors  = np.zeros((max_iteration,), dtype=np.float32)
 

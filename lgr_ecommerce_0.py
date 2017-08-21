@@ -4,11 +4,12 @@ Created on Aug 16, 2017
 @author: Varela
 
 motive: Logistic regression for ecommerce data
+				1 class forecast only 
 '''
 import numpy as np 
 import matplotlib.pyplot as plt 
 
-from utils import get_iris, get_ecommerce, forward, cross_entropy, error_rate 
+from utils import get_ecommerce, forward, cross_entropy, error_rate 
 
 def main():
 	user_action=3
