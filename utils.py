@@ -54,6 +54,15 @@ def get_iris():
 
 	return X, Y 
 
+def get_spambase():
+	X = []; Y =[]
+
+	df = pd.read_csv('./datasets/spambase/spambase.data', sep=',')
+	X=  df.values[:,:-1]
+	Y=  df.values[:,-1]
+
+	return X, Y 	
+
 def get_ecommerce(user_action=1):
 	X = []; Y =[]
 	if not( user_action in [None,1,2,3]): 
