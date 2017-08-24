@@ -27,6 +27,12 @@ def cross_entropy(T, Y):
 			E -= np.log(1.0 - Y[i])
 	return E
 	
+def cost(T, Y):
+	return -(T*np.log(Y)).sum()
+
+def sigmoid_cost(T, Y):
+	return -(T*np.log(Y) + (1-T)*np.log(1-Y)).sum()
+
 def sigmoid(Z):
 	return 1.0/(1.0 + np.exp(-Z))
 
