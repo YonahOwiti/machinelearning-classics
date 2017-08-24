@@ -32,7 +32,7 @@ def my_tokenizer(s, lemmatizer, stopwords):
 	return tokens	
 
 def main():
-	wordnet_lemmatizer = WordNetLemmatizer() 
+	wordnet_lemmatizer = WordNenlptLemmatizer() 
 	titles = [line.strip() for line in open('./datasets/book_titles/book_titles.txt')] 
 	stopwords = set(w.rstrip() for w in open('./aux/stopwords.txt'))
 	stopwords = stopwords.union([ 
