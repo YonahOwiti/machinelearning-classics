@@ -39,6 +39,13 @@ Summary Statistics:
 
 5. Class Distribution: 33.3% for each of 3 classes.
 
+## [Multi-Domain Sentiment Dataset](http://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html)
+The Multi-Domain Sentiment Dataset contains product reviews taken from Amazon.com from 4 product types (domains): Kitchen, Books, DVDs, and Electronics. Each domain has several thousand reviews, but the exact number varies by domain. Reviews contain star ratings (1 to 5 stars) that can be converted into binary labels if needed. This page contains some descriptions about the data. If you have questions, please email me directly [email](http://www.cs.jhu.edu/~mdredze/)
+
+Unlabed instances were removed 
+
+<cite>John Blitzer, Mark Dredze, Fernando Pereira. Biographies, Bollywood, Boom-boxes and Blenders: Domain Adaptation for Sentiment Classification. Association of Computational Linguistics (ACL), 2007.</cite>[PDF](http://www.cs.jhu.edu/~mdredze/publications/sentiment_acl07.pdf)
+
 
 ## [Spambase Data Set](https://archive.ics.uci.edu/ml/datasets/spambase)
 
