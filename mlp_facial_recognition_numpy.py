@@ -81,7 +81,7 @@ class ANN(object):
 def main():
 	X, Y = get_facialexpression(balance_ones=True)
 	
-	M = 500 	
+	M = 200 	
 	ann = ANN(M)
 	ann.fit(X, Y, show_figure=True)
 	print ann.score(X, Y)
