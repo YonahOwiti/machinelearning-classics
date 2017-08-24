@@ -31,7 +31,6 @@ def main():
 	# create the neural network
 	model = MLPClassifier(
 		hidden_layer_sizes=(Ntrain, M), 
-		max_iter=12000, 
 		activation='logistic', 
 		learning_rate='constant',
 		learning_rate_init=1e-7,
