@@ -1,10 +1,10 @@
 '''
-Created on Aug 20, 2017
+Created on Aug 24, 2017
 
 @author: Varela
 
 motivation: Multilayer perceptron for ecommerce data + theano
-	status:	not converging			
+	
 '''
 import numpy as np 
 import matplotlib.pyplot as plt 
