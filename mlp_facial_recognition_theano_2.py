@@ -82,8 +82,6 @@ class AnnTheano2(object):
 			(p, p - learning_rate*(T.grad(costs,p) + reg*p)) for p  in self.params
 		]
 		
-
-		print updates
 		train_op = theano.function(
 			inputs=[thX, thY],
 			updates=updates,
@@ -106,7 +104,7 @@ class AnnTheano2(object):
 					costs.append(c)
 					err = error_rate(Yvalid, p)
 
-				print "i:%d\tj:%d\tnb:%d\tc:%.3f\terr:%.3f\t" % (i,j,n_batches,err)
+					print "i:%d\tj:%d\tnb:%d\tc:%.3f\terr:%.3f\t" % (i,j,n_batches,c,err)
 
 		
 		print "Final error rate", err 
