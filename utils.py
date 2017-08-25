@@ -43,6 +43,9 @@ def softmax(A):
 def forward(W, X):
 	return sigmoid(X.dot(W))
 
+def relu(A):
+	return A * (A>0)
+
 def y2indicator(y, K):
 	#one-hot_codefy :)
 	N = len(y)
@@ -50,6 +53,11 @@ def y2indicator(y, K):
 	for i in xrange(N):
 		ind[i, y[i]] = 1
 	return ind 
+
+def init_weight_and_bias(M1, M2):
+	W = np.random.randn(M1, M2) / np.sqrt(M1+M2)
+	b = np.zeros(M2)
+	return W.astype(np.float64), b.astype(np.float64)
 
 def get_iris():
 	X = []; Y =[]
@@ -77,9 +85,9 @@ def get_ecommerce(user_action=1):
 	df = pd.read_csv('./datasets/ecommerce/ecommerce_data.csv', sep=',', header=0)
 	X=  df.values[:,:-1]
 	if user_action:
-		Y=  np.array(df.values[:,-1] == user_action, dtype=np.int32)
+		Y=  np.array(df.values[:,-1] == user_action, dtype=np.int64)
 	else:
-		Y=  np.array(df.values[:,-1], dtype=np.int32)
+		Y=  np.array(df.values[:,-1], dtype=np.int64)
 				
 	return X, Y 
 

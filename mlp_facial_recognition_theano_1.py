@@ -19,7 +19,7 @@ class AnnTheano(object):
 	def __init__(self, M):
 		self.M = M 
 
-	def fit(self, Xin, Yin, learning_rate=10e-5, reg=10e-8, epochs=10000, show_figure=False):
+	def fit(self, Xin, Yin, learning_rate=10e-7, reg=10e-8, epochs=10000, show_figure=False):
 		Nvalid = 500
 		N, D  = Xin.shape 
 		K =  len(np.unique(Yin))
@@ -94,7 +94,7 @@ class AnnTheano(object):
 		valid_costs.append(cvalid)
 		valid_errors.append(err)		
 
-		print "i=%d\tc=%.3f\terr==%.3f\t" % (epochs,c,err)
+		print "i=%d\tc=%.3f\terr==%.3f\t" % (epochs,cvalid,err)
 
 		
 		print "Final train classification rate", classification_rate(Ytrain, pYtrain)
