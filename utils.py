@@ -57,7 +57,7 @@ def y2indicator(y, K):
 def init_weight_and_bias(M1, M2):
 	W = np.random.randn(M1, M2) / np.sqrt(M1+M2)
 	b = np.zeros(M2)
-	return W.astype(np.float64), b.astype(np.float64)
+	return W.astype(np.float32), b.astype(np.float32)
 
 def get_iris():
 	X = []; Y =[]

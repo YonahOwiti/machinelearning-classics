@@ -35,7 +35,7 @@ class AnnTheano3(object):
 		self.hidden_layer_sizes = hidden_layer_sizes
 
 
-	def fit(self, X, Y, learning_rate=10e-7, mu=0.99, decay=0.99, reg=10e-8, epochs=10000, batch_sz=100, show_figure=False):
+	def fit(self, X, Y, learning_rate=10e-7, mu=0.99, decay=0.99, reg=10e-8,eps=10e-10 ,epochs=400, batch_sz=100, show_figure=False):
 		#Input to float32
 
 		learning_rate = np.float32(learning_rate)
@@ -85,7 +85,7 @@ class AnnTheano3(object):
 		thY = T.ivector('Y')		
 		pY =self.th_forward(thX)
 
-		rcost = reg.T.sum([(p*p).sum() for p in self.params])
+		rcost = reg*T.sum([(p*p).sum() for p in self.params])
 		costs = -T.mean(T.log(pY[T.arange(thY.shape[0]), thY])) + rcost
 		prediction = self.th_predict(thX)
 
@@ -96,7 +96,7 @@ class AnnTheano3(object):
 
 		#Streamline initializations
 		updates = [
-			(c, decay*c + (np.float32(1)-decay)*T.grad(cost, p)*T.grad(cost, p)) for p,c in zip(self.params, cache)
+			(c, decay*c + (np.float32(1)-decay)*T.grad(costs, p)*T.grad(costs, p)) for p,c in zip(self.params, cache)
 		] + [
 			(p, p + mu*p - learning_rate*(T.grad(costs,p) + reg*p)/T.sqrt(c + eps)) for p, c, dp  in zip(self.params, cache, dparams)
 		] + [
