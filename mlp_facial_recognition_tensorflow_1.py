@@ -10,7 +10,7 @@ import numpy as np
 import tensorflow as tf 
 
 import matplotlib.pyplot as plt 
-from utils import get_facialexpression, init_weight_and_bias , error_rate  
+from utils import get_facialexpression, init_weight_and_bias , error_rate, y2indicator 
 from sklearn.utils import shuffle 
 
 class AnnTensorflow1(object):
@@ -20,11 +20,14 @@ class AnnTensorflow1(object):
 
 	def fit(self, X, Y, learning_rate=10e-5, epochs=200, reg=10e-8, batch_sz=200, show_fig=False, activation=tf.tanh):
 		X, Y = shuffle(X, Y)
-		Xvalid, Yvalid = X[-1000:,], Y[-1000:]
-		Xtrain, Ytrain = X[:-1000,:], Y[:-1000]
+		K = len(np.unique(Y))  
+
+		T = y2indicator(Y, K).astype(np.float32)
+		Xvalid, Yvalid, Tvalid = X[-1000:,], Y[-1000:], T[-1000:,:] 
+		Xtrain, Ytrain, Ttrain = X[:-1000,:], Y[:-1000],T[:-1000,:] 
 
 		N, D = Xtrain.shape
-		K = len(np.unique(Y)) 
+		
 
 		#Varianel initialization
 		W1, b1 = init_weight_and_bias(D,self.M)
@@ -36,7 +39,7 @@ class AnnTensorflow1(object):
 		self.b1 = tf.Variable(b1.astype(np.float32), 'b1')
 		self.W2 = tf.Variable(W2.astype(np.float32), 'W2')
 		self.b2 = tf.Variable(b2.astype(np.float32), 'b2')
-		self.params = [W1, b1, W2, b2] 
+		self.params = [self.W1, self.b1, self.W2, self.b2] 
 		# Define placeholders
 		X = tf.placeholder(tf.float32,shape=(None,D),name='X')
 		T = tf.placeholder(tf.float32,shape=(None,K),name='Y')
@@ -66,15 +69,16 @@ class AnnTensorflow1(object):
 				for j in xrange(n_batches): 
 					Xbatch = Xtrain[j*batch_sz:(j+1)*batch_sz,:]
 					Ybatch = Ytrain[j*batch_sz:(j+1)*batch_sz]
+					Tbatch = Ttrain[j*batch_sz:(j+1)*batch_sz,:]
 
 					session.run(train_op,
 						feed_dict={
 							X: Xbatch,
-							T: Ybatch 
+							T: Tbatch 
 					})
 
 					if j % 10 == 0: 
-						c = session.run(cost, feed_dict={X:Xvalid, T:Yvalid} )
+						c = session.run(cost, feed_dict={X:Xvalid, T:Tvalid} )
 						pYvalid  = session.run( self.predict_op, feed_dict={X: Xvalid} )
 						err = error_rate(Yvalid, pYvalid)
 						print "i:%d\tj:%d\tc:%.3f\terr:%.3f\t" % (i,j,c,err)	
@@ -94,9 +98,9 @@ class AnnTensorflow1(object):
 def main():
 	X, Y = get_facialexpression(balance_ones=True)
 	
-	M = 200 	
+	M = 5000 	
 	ann = AnnTensorflow1(M)
-	ann.fit(X, Y, show_fig=True)
+	ann.fit(X, Y, learning_rate=10e-7, reg=10e-6, show_fig=True)
 
 
 

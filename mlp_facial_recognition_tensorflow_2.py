@@ -124,7 +124,7 @@ def main():
 	
 	ann = AnnTensorflow2([2000, 1000, 500])
 	ann.fit(X, Y, show_figure=True)
-	print ann.score(X, Y)
+	
 
 
 
