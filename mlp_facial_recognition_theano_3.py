@@ -35,7 +35,7 @@ class AnnTheano3(object):
 		self.hidden_layer_sizes = hidden_layer_sizes
 
 
-	def fit(self, X, Y, learning_rate=10e-7, mu=0.99, decay=0.99, reg=10e-8,eps=10e-10 ,epochs=400, batch_sz=100, show_figure=False):
+	def fit(self, X, Y, learning_rate=10e-7, mu=0.99, decay=0.999, reg=10e-12,eps=10e-10 ,epochs=400, batch_sz=100, show_figure=False):
 		#Input to float32
 
 		learning_rate = np.float32(learning_rate)
@@ -73,7 +73,45 @@ class AnnTheano3(object):
 		for h in self.hidden_layers: 
 			self.params += h.params
 		self.params += [self.W, self.b]
-		
+
+		# # for momentum
+		# dparams = [theano.shared(np.zeros(p.get_value().shape, dtype=np.float32)) for p in self.params]
+
+		# # for rmsprop
+		# cache = [theano.shared(np.zeros(p.get_value().shape, dtype=np.float32)) for p in self.params]
+
+		# # set up theano functions and variables
+		# thX = T.fmatrix('X')
+		# thY = T.ivector('Y')
+		# pY = self.th_forward(thX)
+
+		# rcost = reg*T.sum([(p*p).sum() for p in self.params])
+		# cost = -T.mean(T.log(pY[T.arange(thY.shape[0]), thY])) + rcost
+		# prediction = self.th_predict(thX)
+
+		# # actual prediction function
+		# self.predict_op = theano.function(inputs=[thX], outputs=prediction)
+		# cost_predict_op = theano.function(inputs=[thX, thY], outputs=[cost, prediction])
+
+		# updates = [
+		#     (c, decay*c + (np.float32(1)-decay)*T.grad(cost, p)*T.grad(cost, p)) for p, c in zip(self.params, cache)
+		# ] + [
+		#     (p, p + mu*dp - learning_rate*T.grad(cost, p)/T.sqrt(c + eps)) for p, c, dp in zip(self.params, cache, dparams)
+		# ] + [
+		#     (dp, mu*dp - learning_rate*T.grad(cost, p)/T.sqrt(c + eps)) for p, c, dp in zip(self.params, cache, dparams)
+		# ]
+
+		# # momentum only
+		# # updates = [
+		# #     (p, p + mu*dp - learning_rate*T.grad(cost, p)) for p, dp in zip(self.params, dparams)
+		# # ] + [
+		# #     (dp, mu*dp - learning_rate*T.grad(cost, p)) for p, dp in zip(self.params, dparams)
+		# # ]
+
+		# train_op = theano.function(
+		#     inputs=[thX, thY],
+		#     updates=updates
+		# )		
 		#for momumentum
 		dparams = [theano.shared(np.zeros(p.get_value().shape, dtype=np.float32)) for p in self.params]
 
@@ -86,21 +124,20 @@ class AnnTheano3(object):
 		pY =self.th_forward(thX)
 
 		rcost = reg*T.sum([(p*p).sum() for p in self.params])
-		costs = -T.mean(T.log(pY[T.arange(thY.shape[0]), thY])) + rcost
+		cost = -T.mean(T.log(pY[T.arange(thY.shape[0]), thY])) + rcost
 		prediction = self.th_predict(thX)
 
 
 		#actual prediction functions and variabels
 		self.predict_op=theano.function(inputs=[thX], outputs=prediction)
-		cost_predict_op=theano.function(inputs=[thX, thY], outputs=[costs, prediction])
+		cost_predict_op=theano.function(inputs=[thX, thY], outputs=[cost, prediction])
 
-		#Streamline initializations
 		updates = [
-			(c, decay*c + (np.float32(1)-decay)*T.grad(costs, p)*T.grad(costs, p)) for p,c in zip(self.params, cache)
+		    (c, decay*c + (np.float32(1)-decay)*T.grad(cost, p)*T.grad(cost, p)) for p, c in zip(self.params, cache)
 		] + [
-			(p, p + mu*p - learning_rate*(T.grad(costs,p) + reg*p)/T.sqrt(c + eps)) for p, c, dp  in zip(self.params, cache, dparams)
+		    (p, p + mu*dp - learning_rate*T.grad(cost, p)/T.sqrt(c + eps)) for p, c, dp in zip(self.params, cache, dparams)
 		] + [
-			(dp, mu*dp - learning_rate*(T.grad(costs,p) + reg*p)/T.sqrt(c + eps)) for p, c, dp  in zip(self.params, cache, dparams)
+		    (dp, mu*dp - learning_rate*T.grad(cost, p)/T.sqrt(c + eps)) for p, c, dp in zip(self.params, cache, dparams)
 		]
 		
 		train_op = theano.function(
