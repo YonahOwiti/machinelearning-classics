@@ -33,7 +33,8 @@ class HiddenLayer(object):
 def AnnTensorflow2(object):
 	def __init___(self, hidden_layer_sizes):
 		self.hidden_layer_sizes = hidden_layer_sizes		
-
+		return self 
+		
 	def fit(self, X, Y , learning_rate=10e-8, mu=0.99, decay=0.99, reg=10e-8,epochs=400, batch_sz=100, show_figure=False):
 		X, Y = shuffle(X, Y)
 		K = len(np.unique(Y))
@@ -123,6 +124,7 @@ def main():
 	X, Y = get_facialexpression(balance_ones=True)
 	
 	ann = AnnTensorflow2([2000, 1000, 500])
+	print type(ann)
 	ann.fit(X, Y, show_figure=True)
 	
 

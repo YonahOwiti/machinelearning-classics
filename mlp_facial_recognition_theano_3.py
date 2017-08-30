@@ -74,44 +74,6 @@ class AnnTheano3(object):
 			self.params += h.params
 		self.params += [self.W, self.b]
 
-		# # for momentum
-		# dparams = [theano.shared(np.zeros(p.get_value().shape, dtype=np.float32)) for p in self.params]
-
-		# # for rmsprop
-		# cache = [theano.shared(np.zeros(p.get_value().shape, dtype=np.float32)) for p in self.params]
-
-		# # set up theano functions and variables
-		# thX = T.fmatrix('X')
-		# thY = T.ivector('Y')
-		# pY = self.th_forward(thX)
-
-		# rcost = reg*T.sum([(p*p).sum() for p in self.params])
-		# cost = -T.mean(T.log(pY[T.arange(thY.shape[0]), thY])) + rcost
-		# prediction = self.th_predict(thX)
-
-		# # actual prediction function
-		# self.predict_op = theano.function(inputs=[thX], outputs=prediction)
-		# cost_predict_op = theano.function(inputs=[thX, thY], outputs=[cost, prediction])
-
-		# updates = [
-		#     (c, decay*c + (np.float32(1)-decay)*T.grad(cost, p)*T.grad(cost, p)) for p, c in zip(self.params, cache)
-		# ] + [
-		#     (p, p + mu*dp - learning_rate*T.grad(cost, p)/T.sqrt(c + eps)) for p, c, dp in zip(self.params, cache, dparams)
-		# ] + [
-		#     (dp, mu*dp - learning_rate*T.grad(cost, p)/T.sqrt(c + eps)) for p, c, dp in zip(self.params, cache, dparams)
-		# ]
-
-		# # momentum only
-		# # updates = [
-		# #     (p, p + mu*dp - learning_rate*T.grad(cost, p)) for p, dp in zip(self.params, dparams)
-		# # ] + [
-		# #     (dp, mu*dp - learning_rate*T.grad(cost, p)) for p, dp in zip(self.params, dparams)
-		# # ]
-
-		# train_op = theano.function(
-		#     inputs=[thX, thY],
-		#     updates=updates
-		# )		
 		#for momumentum
 		dparams = [theano.shared(np.zeros(p.get_value().shape, dtype=np.float32)) for p in self.params]
 
