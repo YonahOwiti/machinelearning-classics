@@ -30,11 +30,11 @@ class HiddenLayer(object):
 		return tf.nn.relu( tf.matmul(X, self.W) + self.b)
 
 
-def AnnTensorflow2(object):
-	def __init___(self, hidden_layer_sizes):
+class AnnTensorflow2(object):
+	def __init__(self, hidden_layer_sizes):
 		self.hidden_layer_sizes = hidden_layer_sizes		
-		return self 
 		
+
 	def fit(self, X, Y , learning_rate=10e-8, mu=0.99, decay=0.99, reg=10e-8,epochs=400, batch_sz=100, show_figure=False):
 		X, Y = shuffle(X, Y)
 		K = len(np.unique(Y))
@@ -46,7 +46,6 @@ def AnnTensorflow2(object):
 
 
 		N, D = X.shape 
-				
 
 		#Build hidden layers
 		M1 = D 
@@ -71,7 +70,7 @@ def AnnTensorflow2(object):
 		Yish = self.forward(X)
 
 		# cost functions
-		rcost = reg*tf.sum([tf.nn.l2_loss(p) for p in self.params]) # L2 regularization costs 
+		rcost = reg*tf.reduce_sum([tf.nn.l2_loss(p) for p in self.params]) # L2 regularization costs 
 		cost = tf.reduce_sum(tf.nn.softmax_cross_entropy_with_logits(labels=Y, logits=Yish)) + rcost
 
 		train_op = tf.train.RMSPropOptimizer(learning_rate, decay=decay, momentum=mu).minimize(cost)
@@ -85,7 +84,7 @@ def AnnTensorflow2(object):
 			session.run(init)
 			
 			for i in xrange(epochs):
-				X, Y = shuffle(X, Y)
+				Xtrain, Ytrain = shuffle(Xtrain, Ytrain)
 
 				for j in xrange(n_batches):
 					Xbatch = Xtrain[j*(batch_sz):(j+1)*batch_sz,:]
@@ -117,7 +116,7 @@ def AnnTensorflow2(object):
 	def forward(self, X):	
 		Z = X 
 		for h in self.hidden_layers:
-			Z = h.forward(X)
+			Z = h.forward(Z)
 		return tf.matmul(Z, self.W) + self.b
 	
 def main():
