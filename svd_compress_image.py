@@ -91,35 +91,39 @@ def svd_compress_rgb(rgbimg, r=3, verbose=True):
 def main():
 	img = get_lena()
 
+	imgnorm = np.linalg.norm(img)
 	min_size = min(img.shape[0:2])
 	R = [0.05, 0.10 , 0.25, 0.50]
 	dims= [] 
 	images=[] 
 	ratios=[] 
+	norms= [] 
 	for r in R:
 		d = int(min_size*r)
 		newimg, ratio= svd_compress_rgb(img, r=d, verbose=False)
 
+		norm = np.linalg.norm(newimg) / imgnorm
 		dims.append(d)
 		images.append(newimg)
 		ratios.append(ratio)
-
+		norms.append(norm) 
 	# Four axes, returned as a 2-d array
-	f, axarr = plt.subplots(2, 2)
+	f, axarr = plt.subplots(2, 2, figsize=(12,12))
+
 	axarr[0, 0].imshow(images[0])
-	axarr[0, 0].set_title('dims=%d, ratio=%.2f' % (dims[0], ratios[0]) )
+	axarr[0, 0].set_title('dims=%d, ratio=%.2f, forbenius=%.2f' % (dims[0], ratios[0], norms[0]), fontsize=10 )
 	axarr[0, 1].imshow(images[1])
-	axarr[0, 1].set_title('dims=%d, ratio=%.2f' % (dims[1], ratios[1]) )
+	axarr[0, 1].set_title('dims=%d, ratio=%.2f, forbenius=%.2f' % (dims[1], ratios[1], norms[1]), fontsize=10 )
 	axarr[1, 0].imshow(images[2])
-	axarr[1, 0].set_title('dims=%d, ratio=%.2f' % (dims[2], ratios[2]) )
+	axarr[1, 0].set_title('dims=%d, ratio=%.2f, forbenius=%.2f' % (dims[2], ratios[2], norms[2]), fontsize=10 )
 	axarr[1, 1].imshow(images[3])
-	axarr[1, 1].set_title('dims=%d, ratio=%.2f' % (dims[3], ratios[3]) )
+	axarr[1, 1].set_title('dims=%d, ratio=%.2f, forbenius=%.2f' % (dims[3], ratios[3], norms[3]), fontsize=10 )
 	
 	# Fine-tune figure; hide x ticks for top plots and y ticks for right plots
 	plt.setp([a.get_xticklabels() for a in axarr[0, :]], visible=False)
 	plt.setp([a.get_yticklabels() for a in axarr[:, 1]], visible=False)
+	plt.title('Image using various compression rates')
 	plt.show()
-	# plt.imshow(images)
 
 	
 if __name__ == '__main__':
