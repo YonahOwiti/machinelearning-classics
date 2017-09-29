@@ -21,7 +21,7 @@ class LogisticModelSoftmax(object):
 	def __init__(self):
 		pass 
 
-	def fit(self, X, Y, learning_rate=10e-8, reg=10e-8, epochs=10000, show_figure=False):
+	def fit(self, X, Y, learning_rate=10e-8, reg=10e-8, epochs=12000, show_figure=False):
 		
 		X, Y = shuffle(X, Y)
 		K = len(set(Y))

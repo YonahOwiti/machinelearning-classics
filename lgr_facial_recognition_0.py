@@ -3,7 +3,7 @@ Created on Aug 17, 2017
 
 @author: Varela
 
-motive: Logistic regression for fer2013.csv dataset
+motivation: Logistic regression for fer2013.csv dataset
 '''
 
 import numpy as np 

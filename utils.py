@@ -7,8 +7,10 @@ Created on Aug 16, 2017
 
 import numpy as np 
 import pandas as pd 
+# import glob 
 
 from sklearn.utils import shuffle
+from scipy import misc 
 
 def error_rate(T,Y):
 	return np.mean(np.round(Y)!=T)
@@ -136,7 +138,13 @@ def get_mnist():
 	Ytest = train[-1000:,0].astype(np.int32)
 	return Xtrain, Ytrain, Xtest, Ytest
 
-	
+def get_lena():
+	lena =misc.imread('./datasets/photo/lena.png')
+	print lena.shape 
+	print lena.dtype 
+	return lena
+
+
 
 
 

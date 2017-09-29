@@ -3,7 +3,7 @@ Created on Aug 19, 2017
 
 @author: Varela
 
-motive: Applies multiclass forecast / lazyprogrammer's implementation
+motivatoion:  Logistic regression for fer2013.csv dataset / lazyprogrammer's implementation
 course url: https://www.udemy.com/data-science-logistic-regression-in-python/learn/v4/t/lecture/5217332?start=0
 
 '''
@@ -11,6 +11,8 @@ course url: https://www.udemy.com/data-science-logistic-regression-in-python/lea
 
 import numpy as np 
 import matplotlib.pyplot as plt 
+import sys 
+
 from sklearn.utils import shuffle 
 from utils import sigmoid, error_rate, get_facialexpression, cross_entropy 
 from utils_data import class1detect
@@ -43,7 +45,9 @@ class LogisticModel(object):
 				c = cross_entropy(Yvalid, pYvalid) 
 				costs.append(c)	
 				e = error_rate(Yvalid, pYvalid)
-				print "i", i, "cost:", c, "error", e
+				sys.stdout.write( "i:%s\tcost:%.4f\terror:%.4f\t\r" % (format(i,'04d'),c,e))
+				sys.stdout.flush()
+				# print "i", i, "cost:", c, "error", e
 				if e < best_validation_error:
 					best_validation_error = e
 		print "best_validation_error:", best_validation_error
@@ -64,13 +68,15 @@ class LogisticModel(object):
 		return 1 - error_rate(Y, prediction)
 
 def main():
+	print 'Loading ...'
 	X, Y = get_facialexpression(balance_ones=True)
 
 	detect=1
+	print 'detecting class', detect
 	Y = class1detect(Y, detect)
 	
 	model = LogisticModel()
-	model.fit(X, Y, show_figure=True)
+	model.fit(X, Y, epochs=5000, show_figure=True)
 	model.score(X, Y)
 
 
